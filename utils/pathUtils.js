@@ -2,9 +2,9 @@
 
 const _ = require('lodash');
 const URL = require('url-parse');
-const SHA1 = require("crypto-js/sha1");
+const SHA1 = require('crypto-js/sha1');
 
-const defaultImageTypes = ['png', 'jpeg', 'jpg', 'gif', 'bmp', 'tiff', 'tif'];
+const defaultImageTypes = ['png', 'jpeg', 'jpg', 'gif', 'bmp', 'tiff', 'tif', 'mp4'];
 
 function serializeObjectKeys(obj) {
     return _(obj)
@@ -42,19 +42,22 @@ function generateCacheKey(url, useQueryParamsInCacheKey = true) {
 }
 
 function getHostCachePathComponent(url) {
-    const {
-        host
-    } = new URL(url);
+    const { host } = new URL(url);
 
-    return host.replace(/\.:/gi, '_').replace(/[^a-z0-9_]/gi, '_').toLowerCase()
-      + '_' + SHA1(host);
+    return (
+        host
+            .replace(/\.:/gi, '_')
+            .replace(/[^a-z0-9_]/gi, '_')
+            .toLowerCase() +
+        '_' +
+        SHA1(host)
+    );
 }
 
 /**
  * handle the resolution of URLs to local file paths
  */
 module.exports = {
-
     /**
      * Given a URL and some options returns the file path in the file system corresponding to it's cached image location
      * @param url
@@ -81,7 +84,6 @@ module.exports = {
         return `${hostCachePath}/${cacheKey}`;
     },
 
-
     /**
      * returns the url after removing all unused query params
      * @param url
@@ -97,6 +99,5 @@ module.exports = {
             parsedUrl.set('query', {});
         }
         return parsedUrl.toString();
-    }
-
+    },
 };
